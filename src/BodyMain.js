@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import RepositoryCard from "./repositoryCard";
 import { Col, Row, Card,  Button, Input,Modal } from "antd";
 import {
   SettingOutlined,
@@ -21,7 +22,7 @@ function BodyPage() {
   ];
   const[getArrayCategories,setArrayCategories]=useState(Categories)
   const[getArrayCategoriesDuplicate,setArrayCategoriesDuplicate]=useState(Categories)
- 
+  const[repository,setRepository]= useState([])
   const[getModal,setModal]=useState({
     name:'',
     visible:false,
@@ -46,6 +47,12 @@ function BodyPage() {
    let filteredData = getArrayCategoriesDuplicate.filter(i=>i.topic.toLowerCase().includes(value))
    setArrayCategories(filteredData)
   }
+
+  useEffect(()=>{
+    fetch("https://aws-backend-hvr5.onrender.com/")
+    .then((res)=>res.json())
+    .then((data)=>setRepository(data));
+  },[])
   return (
     <div>
       <Row>
@@ -127,9 +134,43 @@ function BodyPage() {
               </div>
             </Col>
           </Row>
-          <Row>
-            <Col span={24}></Col>
+          <Row
+           style={{
+            height: "9vh",
+            background: "white",
+            display: "flex",
+            alignItems: "center",
+            border: "1px solid #e8e8f6",
+          }}
+          >
+            <Col span={18}></Col>
+            <Col span={6}
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div>6,227 results</div>
+            <div>
+              <Button style={{ background: "White", color: "Black" }}>
+               Orginal order
+              </Button>
+            </div>
+            </Col>
+
           </Row>
+        <Row>
+          <Col span={1}></Col>
+          <Col span={23}>
+          <div>
+              {repository.map((item)=>{
+               return <RepositoryCard value={item}/>
+
+              })}
+            
+            </div>
+            </Col>
+          </Row>     
         </Col>
       </Row>
 
